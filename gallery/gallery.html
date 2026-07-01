@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>체육대회 2026 | 함께, 가온</title>
+<title>체육대회 Recap 2026 | 함께, 가온</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0;}
 body{background:#0A1628;font-family:'Malgun Gothic','맑은 고딕',Apple SD Gothic Neo,sans-serif;color:#E0E8F4;}
@@ -16,78 +16,134 @@ header p{color:#8BA3C4;font-size:13px;margin-top:5px;}
 
 .container{max-width:900px;margin:0 auto;padding:40px 20px;}
 
-/* ── 섹션 공통 ── */
 .section{margin-bottom:60px;}
-.section-label{display:inline-block;background:#1E5FA8;color:#fff;font-size:11px;font-weight:700;
-  padding:3px 12px;border-radius:20px;letter-spacing:0.06em;margin-bottom:14px;}
+.section-label{display:inline-block;background:#1E5FA8;color:#fff;font-size:11px;font-weight:700;padding:3px 12px;border-radius:20px;letter-spacing:0.06em;margin-bottom:14px;}
 .section-text{font-size:14.5px;line-height:1.9;color:#C8D8F0;word-break:keep-all;}
 
-/* ── 2열 레이아웃 ── */
 .row{display:grid;gap:20px;align-items:start;margin-top:18px;}
-.row-2{grid-template-columns:1fr 1fr;}
 .row-text-photos{grid-template-columns:1fr 1.2fr;}
 .row-photos-text{grid-template-columns:1.2fr 1fr;}
+.row-2{grid-template-columns:1fr 1fr;}
 
-/* ── 사진 ── */
+/* ── 사진 그룹 ── */
 .photo-group{display:flex;flex-direction:column;gap:8px;}
-.photo-group.row2{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
-.photo-group.row3{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
-.photo-group.row3 .wide{grid-column:span 2;}
-img.thumb{width:100%;border-radius:8px;display:block;object-fit:cover;transition:opacity 0.2s;cursor:pointer;}
-img.thumb:hover{opacity:0.88;}
+.photo-group.grid2{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+.photo-group.grid3{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+.photo-group.grid3 .span2{grid-column:span 2;}
+
+/* ── 썸네일: aspect-ratio로 높이 통일 ── */
+img.thumb{
+  width:100%;
+  display:block;
+  border-radius:8px;
+  object-fit:cover;
+  aspect-ratio:4/3;   /* ← 핵심: 모든 썸네일 동일 비율 */
+  cursor:pointer;
+  transition:opacity 0.18s, transform 0.18s;
+}
+img.thumb:hover{opacity:0.85;transform:scale(1.02);}
+img.thumb.wide{aspect-ratio:16/9;} /* 와이드샷 별도 비율 */
+
 img.wide-shot{width:100%;border-radius:8px;display:block;}
 
-/* ── 전체폭 사진 ── */
-.full-photo{margin-top:18px;}
-
-/* ── 구분선 ── */
 .divider{height:1px;background:linear-gradient(to right,transparent,#1E3A5F,transparent);margin:10px 0 50px;}
 
-/* ── 에필로그 ── */
-.epilogue{background:#0F2040;border-radius:12px;padding:28px 32px;margin-top:0;}
+.epilogue{background:#0F2040;border-radius:12px;padding:28px 32px;}
 .epilogue p{font-size:14px;line-height:1.9;color:#B0C4DE;}
 
 footer{text-align:center;padding:28px;color:#3A5070;font-size:11px;}
 
-/* ── 모바일 ── */
+/* ══ 라이트박스 ══ */
+#lightbox{
+  display:none;
+  position:fixed;inset:0;
+  background:rgba(0,0,0,0.88);
+  z-index:1000;
+  align-items:center;
+  justify-content:center;
+  padding:20px;
+  animation:fadeIn 0.18s ease;
+}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+#lightbox img{
+  max-width:92vw;
+  max-height:88vh;
+  border-radius:10px;
+  box-shadow:0 8px 40px rgba(0,0,0,0.7);
+  object-fit:contain;
+}
+#lightbox-close{
+  position:fixed;top:18px;right:24px;
+  color:#fff;font-size:32px;font-weight:300;
+  cursor:pointer;line-height:1;
+  background:rgba(0,0,0,0.4);
+  border:none;border-radius:50%;
+  width:44px;height:44px;
+  display:flex;align-items:center;justify-content:center;
+  transition:background 0.15s;
+}
+#lightbox-close:hover{background:rgba(255,255,255,0.15);}
+#lb-prev,#lb-next{
+  position:fixed;top:50%;transform:translateY(-50%);
+  background:rgba(0,0,0,0.5);border:none;
+  color:#fff;font-size:28px;
+  width:48px;height:64px;
+  cursor:pointer;border-radius:6px;
+  display:flex;align-items:center;justify-content:center;
+  transition:background 0.15s;
+}
+#lb-prev{left:16px;}#lb-next{right:16px;}
+#lb-prev:hover,#lb-next:hover{background:rgba(255,255,255,0.15);}
+#lb-counter{
+  position:fixed;bottom:20px;left:50%;transform:translateX(-50%);
+  color:#aaa;font-size:13px;background:rgba(0,0,0,0.5);
+  padding:4px 14px;border-radius:20px;
+}
+
 @media(max-width:650px){
   .row-text-photos,.row-photos-text,.row-2{grid-template-columns:1fr;}
-  .photo-group.row2,.photo-group.row3{grid-template-columns:1fr 1fr;}
   .container{padding:24px 14px;}
 }
 </style>
 </head>
 <body>
 
+<!-- 라이트박스 -->
+<div id="lightbox" onclick="lbClickBg(event)">
+  <button id="lightbox-close" onclick="closeLb()">&#x2715;</button>
+  <button id="lb-prev" onclick="lbMove(-1)">&#8249;</button>
+  <img id="lightbox-img" src="" alt="">
+  <button id="lb-next" onclick="lbMove(1)">&#8250;</button>
+  <div id="lb-counter"></div>
+</div>
+
 <header>
-  <h1>🏅 가온 체육대회 2026</h1>
+  <h1>🏅 가온 체육대회 Recap 2026</h1>
   <p>함께, 가온 여름호 · 현장 스토리</p>
   <a class="back" href="javascript:history.back()">← 뉴스레터로 돌아가기</a>
 </header>
 
 <div class="container">
 
-  <!-- ── 섹션 1: 입장 / 포토존 ── -->
+  <!-- ── 섹션1: 입장 & 포토존 ── -->
   <div class="section">
     <span class="section-label">🎟️ 입장 &amp; 포토존</span>
     <div class="row row-text-photos">
-      <div>
-        <p class="section-text">가장 먼저 가온 크루들은 입장해서 럭키드로우 추첨을 위해 추첨볼에 이름을 적었어요. 당첨이 되길 바라는 마음을 가득 담아서 말이죠. 그리고 상상도 못한 정체! 가온 크루들은 각자의 개성을 잔뜩 뽐냈는데요, 팀을 응원하는 마음을 가득 담아 동물 탈을 준비해 온 분들도 계셨구요, 본격적으로 붐비기 전에 포토존에서 추억을 찰-칵! 남기기도 했습니다.</p>
-      </div>
-      <div class="photo-group row3">
-        <img class="thumb wide" src="https://kaonmarketing2-coder.github.io/newsletter-2026summer/images/image020.png" alt="입장">
-        <img class="thumb" src="https://kaonmarketing2-coder.github.io/newsletter-2026summer/images/image022.png" alt="포토존">
-        <img class="thumb" src="https://kaonmarketing2-coder.github.io/newsletter-2026summer/images/image024.png" alt="포토존">
+      <div><p class="section-text">가장 먼저 가온 크루들은 입장해서 럭키드로우 추첨을 위해 추첨볼에 이름을 적었어요. 당첨이 되길 바라는 마음을 가득 담아서 말이죠. 그리고 상상도 못한 정체! 가온 크루들은 각자의 개성을 잔뜩 뽐냈는데요, 팀을 응원하는 마음을 가득 담아 동물 탈을 준비해 온 분들도 계셨구요, 본격적으로 붐비기 전에 포토존에서 추억을 찰-칵! 남기기도 했습니다.</p></div>
+      <div class="photo-group grid3">
+        <img class="thumb span2 wide" src="https://kaonmarketing2-coder.github.io/newsletter-2026summer/images/image020.png" alt="입장" onclick="openLb(this)">
+        <img class="thumb" src="https://kaonmarketing2-coder.github.io/newsletter-2026summer/images/image022.png" alt="포토존" onclick="openLb(this)">
+        <img class="thumb" src="https://kaonmarketing2-coder.github.io/newsletter-2026summer/images/image024.png" alt="포토존" onclick="openLb(this)">
       </div>
     </div>
   </div>
   <div class="divider"></div>
 
-  <!-- ── 섹션 2: 준비운동 ── -->
+  <!-- ── 섹션2: 준비운동 ── -->
   <div class="section">
     <span class="section-label">🤸 준비운동</span>
     <div class="row row-photos-text">
-      <img class="wide-shot" src="https://kaonmarketing2-coder.github.io/newsletter-2026summer/images/image026.png" alt="준비운동 단체">
+      <img class="wide-shot" src="https://kaonmarketing2-coder.github.io/newsletter-2026summer/images/image026.png" alt="준비운동 단체" onclick="openLb(this)" style="cursor:pointer;border-radius:8px;">
       <div style="display:flex;align-items:center;">
         <p class="section-text">경기를 시작하기 전 준비 운동은 필수! 중요한 건 첫째도 안전, 둘째도 안전이죠. MC의 구령에 맞추어 머리 어깨 무릎 발 허리 모두모두 돌리고 돌리고~! 몸이 놀라지 않도록 충분히 풀어주었어요.</p>
       </div>
@@ -95,30 +151,28 @@ footer{text-align:center;padding:28px;color:#3A5070;font-size:11px;}
   </div>
   <div class="divider"></div>
 
-  <!-- ── 섹션 3: 가온 놀이동산 ── -->
+  <!-- ── 섹션3: 가온 놀이동산 ── -->
   <div class="section">
     <span class="section-label">🎡 가온 놀이동산</span>
     <div class="row row-text-photos">
-      <div>
-        <p class="section-text">다양한 놀거리는 덤! 경기에 참여하지 않는 가온 크루들도 언제든 재미나게 즐길 수 있도록 가온 놀이동산을 신설했어요. 평소에 접하기 어려운 에어바운스부터 동료들과 가볍게 즐기기 좋은 탁구, 림보, 전자다트게임…전부 나열하기 어려울만큼 여러가지 게임들을 준비했어요. 참여한 게임의 수에 따라 경품을 지급해 드렸는데요, 예상을 상회하는 높은 참여율에 인기 경품은 오전에 전부 소진되기도 했습니다. (내년에는 더 많이 준비해야겠어요!)</p>
-      </div>
-      <div class="photo-group row3">
-        <img class="thumb wide" src="https://kaonmarketing2-coder.github.io/newsletter-2026summer/images/image028.png" alt="놀이동산">
-        <img class="thumb" src="https://kaonmarketing2-coder.github.io/newsletter-2026summer/images/image030.png" alt="게임">
-        <img class="thumb" src="https://kaonmarketing2-coder.github.io/newsletter-2026summer/images/image032.png" alt="게임">
+      <div><p class="section-text">다양한 놀거리는 덤! 경기에 참여하지 않는 가온 크루들도 언제든 재미나게 즐길 수 있도록 가온 놀이동산을 신설했어요. 평소에 접하기 어려운 에어바운스부터 동료들과 가볍게 즐기기 좋은 탁구, 림보, 전자다트게임…전부 나열하기 어려울만큼 여러가지 게임들을 준비했어요. 참여한 게임의 수에 따라 경품을 지급해 드렸는데요, 예상을 상회하는 높은 참여율에 인기 경품은 오전에 전부 소진되기도 했습니다. (내년에는 더 많이 준비해야겠어요!)</p></div>
+      <div class="photo-group grid3">
+        <img class="thumb span2 wide" src="https://kaonmarketing2-coder.github.io/newsletter-2026summer/images/image028.png" alt="놀이동산" onclick="openLb(this)">
+        <img class="thumb" src="https://kaonmarketing2-coder.github.io/newsletter-2026summer/images/image030.png" alt="게임" onclick="openLb(this)">
+        <img class="thumb" src="https://kaonmarketing2-coder.github.io/newsletter-2026summer/images/image032.png" alt="게임" onclick="openLb(this)">
       </div>
     </div>
   </div>
   <div class="divider"></div>
 
-  <!-- ── 섹션 4: 경기 ── -->
+  <!-- ── 섹션4: 경기 하이라이트 ── -->
   <div class="section">
     <span class="section-label">⚽ 경기 하이라이트</span>
     <div class="row row-photos-text">
-      <div class="photo-group row3">
-        <img class="thumb wide" src="https://kaonmarketing2-coder.github.io/newsletter-2026summer/images/image034.png" alt="축구">
-        <img class="thumb" src="https://kaonmarketing2-coder.github.io/newsletter-2026summer/images/image036.png" alt="신입스테이지">
-        <img class="thumb" src="https://kaonmarketing2-coder.github.io/newsletter-2026summer/images/image038.png" alt="팀경기">
+      <div class="photo-group grid3">
+        <img class="thumb span2 wide" src="https://kaonmarketing2-coder.github.io/newsletter-2026summer/images/image034.png" alt="축구" onclick="openLb(this)">
+        <img class="thumb" src="https://kaonmarketing2-coder.github.io/newsletter-2026summer/images/image036.png" alt="신입스테이지" onclick="openLb(this)">
+        <img class="thumb" src="https://kaonmarketing2-coder.github.io/newsletter-2026summer/images/image038.png" alt="팀경기" onclick="openLb(this)">
       </div>
       <div style="display:flex;align-items:center;">
         <p class="section-text">예선전부터 결승까지! 월드컵을 방불케하는 축구 경기는 뛰는 사람도 응원하는 사람도 모두 쫄깃쫄깃한 경기를 보여주었구요, 점심시간에 진행된 신입스테이지에서는 공채 2기 신입사원분들이 열정과 패기를 뽐내주었답니다. 그리고 모두가 참여할 수 있었던 팀별 경기는 다같이 협력하고 으쌰으쌰하며 하나되었어요.</p>
@@ -127,22 +181,63 @@ footer{text-align:center;padding:28px;color:#3A5070;font-size:11px;}
   </div>
   <div class="divider"></div>
 
-  <!-- ── 섹션 5: 시상 / 마무리 ── -->
+  <!-- ── 섹션5: 시상 & 마무리 ── -->
   <div class="section">
     <span class="section-label">🏆 시상 &amp; 마무리</span>
-    <div class="row row-2" style="margin-bottom:16px;">
-      <img class="thumb" src="https://kaonmarketing2-coder.github.io/newsletter-2026summer/images/image040.png" alt="시상">
-      <img class="thumb" src="https://kaonmarketing2-coder.github.io/newsletter-2026summer/images/image042.png" alt="럭키드로우">
+    <div class="row row-2" style="margin-bottom:14px;">
+      <img class="thumb" src="https://kaonmarketing2-coder.github.io/newsletter-2026summer/images/image040.png" alt="시상" onclick="openLb(this)">
+      <img class="thumb" src="https://kaonmarketing2-coder.github.io/newsletter-2026summer/images/image042.png" alt="럭키드로우" onclick="openLb(this)">
     </div>
-    <img class="wide-shot" src="https://kaonmarketing2-coder.github.io/newsletter-2026summer/images/image044.png" alt="단체사진" style="border-radius:8px;margin-bottom:20px;">
-    <div class="epilogue">
-      <p>마지막으로 시상과 럭키드로우를 진행했는데요, 팀 리더가 직접 하루 가장 활약을 많이 한 MVP를 선정하였고, 입장하면서 넣었던 추첨볼로 럭키드로우도 진행했어요. 저는 아쉽게도 당첨되지 못하였지만, 행운의 당첨자분들께서 행복을 잔뜩 만끽하셨답니다. 모두가 하나된 체육대회! 뜨거운 태양 아래서 땀흘리고 협동하며 하나가 되었는데요, 단체사진을 보니 다시 그날이 생생하게 떠오르는 것만 같아요. 가온크루들도 즐거우셨나요? 반복되는 일상 속에서 하루만큼은 리프레시가 되었기를 바라요. 내년에도 잘 준비해 볼게요! 새로운 아이디어가 있다면 언제든 알려주세요 😉</p>
-    </div>
+    <img class="wide-shot" src="https://kaonmarketing2-coder.github.io/newsletter-2026summer/images/image044.png" alt="단체사진"
+      onclick="openLb(this)" style="cursor:pointer;margin-bottom:20px;">
+    <div class="epilogue"><p>마지막으로 시상과 럭키드로우를 진행했는데요, 팀 리더가 직접 하루 가장 활약을 많이 한 MVP를 선정하였고, 입장하면서 넣었던 추첨볼로 럭키드로우도 진행했어요. 저는 아쉽게도 당첨되지 못하였지만, 행운의 당첨자분들께서 행복을 잔뜩 만끽하셨답니다. 모두가 하나된 체육대회! 뜨거운 태양 아래서 땀흘리고 협동하며 하나가 되었는데요, 단체사진을 보니 다시 그날이 생생하게 떠오르는 것만 같아요. 가온크루들도 즐거우셨나요? 반복되는 일상 속에서 하루만큼은 리프레시가 되었기를 바라요. 내년에도 잘 준비해 볼게요! 새로운 아이디어가 있다면 언제든 알려주세요 😉</p></div>
   </div>
 
 </div>
-
 <footer>Copyright © 2026 KAON Group Co., Ltd. · Made by. Branding &amp; Culture Part</footer>
 
+<script>
+// ── 전체 썸네일 수집 ──
+const allImgs = () => Array.from(document.querySelectorAll('img[onclick]'));
+let curIdx = 0;
+
+function openLb(el) {
+  const imgs = allImgs();
+  curIdx = imgs.indexOf(el);
+  document.getElementById('lightbox-img').src = el.src;
+  document.getElementById('lightbox').style.display = 'flex';
+  updateCounter();
+  document.body.style.overflow = 'hidden';
+}
+
+function closeLb() {
+  document.getElementById('lightbox').style.display = 'none';
+  document.body.style.overflow = '';
+}
+
+function lbMove(dir) {
+  const imgs = allImgs();
+  curIdx = (curIdx + dir + imgs.length) % imgs.length;
+  document.getElementById('lightbox-img').src = imgs[curIdx].src;
+  updateCounter();
+}
+
+function updateCounter() {
+  const imgs = allImgs();
+  document.getElementById('lb-counter').textContent = (curIdx + 1) + ' / ' + imgs.length;
+}
+
+function lbClickBg(e) {
+  if (e.target === document.getElementById('lightbox')) closeLb();
+}
+
+document.addEventListener('keydown', e => {
+  const lb = document.getElementById('lightbox');
+  if (lb.style.display === 'none') return;
+  if (e.key === 'Escape') closeLb();
+  if (e.key === 'ArrowLeft') lbMove(-1);
+  if (e.key === 'ArrowRight') lbMove(1);
+});
+</script>
 </body>
 </html>
